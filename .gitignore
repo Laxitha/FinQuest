@@ -1,0 +1,4 @@
+node_modules/
+finquest.db
+.DS_Store
+*.log
