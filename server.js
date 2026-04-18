@@ -13,6 +13,10 @@ app.use(bodyParser.json());
 // Serve the static frontend implicitly
 app.use(express.static(__dirname));
 
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'finquest-app.html'));
+});
+
 const db = new sqlite3.Database(path.join(__dirname, 'finquest.db'), (err) => {
   if (err) console.error("Database opening error: ", err);
 });
