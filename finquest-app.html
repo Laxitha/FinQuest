@@ -950,6 +950,22 @@ function nav(page) {
   closeSidebar();
 }
 
+function refreshUI() {
+  if (!currentUser) return;
+  const activePage = document.querySelector('.page.active')?.id?.replace('page-', '');
+  
+  updateSidebar();
+  renderDashboard();
+  
+  if (activePage === 'expenses') renderExpenses();
+  if (activePage === 'goals') renderGoals();
+  if (activePage === 'crypto') renderCrypto();
+  if (activePage === 'badges') buildBadges();
+  if (activePage === 'quests') renderQuests();
+  if (activePage === 'rewards') renderRewards();
+  if (activePage === 'settings') buildSettings();
+}
+
 function openSidebar() {
   document.getElementById('sidebar').classList.add('open');
   document.getElementById('sidebarOverlay').classList.add('open');
@@ -1140,18 +1156,18 @@ function addExpense() {
     }
   }
 
-  // Clear form FIRST, then save and render
+  // Clear form FIRST
   document.getElementById('exp-desc').value = '';
   document.getElementById('exp-amount').value = '';
   document.getElementById('exp-notes').value = '';
 
-  // Save to DB, then render immediately from in-memory state
+  // Update UI immediately (Instant gratification)
+  refreshUI();
+  fireConfetti();
+
+  // Save to DB in background
   saveUser(currentUser);
   checkBadges();
-  renderExpenses();
-  renderDashboard();
-  updateSidebar();
-  fireConfetti();
 }
 
 function renderExpenses() {
@@ -1251,9 +1267,7 @@ function saveGoal() {
   }
   saveUser(currentUser);
   closeGoalModal();
-  renderGoals();
-  renderDashboard();
-  updateSidebar();
+  refreshUI();
   if (!editGoalId) fireConfetti();
 }
 
@@ -1324,9 +1338,7 @@ function addContrib() {
   saveUser(currentUser);
   checkBadges();
   closeContribModal();
-  renderGoals();
-  renderDashboard();
-  updateSidebar();
+  refreshUI();
   fireConfetti();
 }
 
